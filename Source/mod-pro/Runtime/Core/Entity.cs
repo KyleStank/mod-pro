@@ -2,9 +2,7 @@
 
 using UnityEngine;
 
-using MoonSharp.Interpreter;
-
-namespace ModPro.Runtime.Game
+namespace ModPro.Runtime.Core
 {
     /// <summary>
     /// Base class that controls parts of a GameObject that can be easily replaced through mods.

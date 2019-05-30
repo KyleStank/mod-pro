@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ModPro.Runtime.Game
+namespace ModPro.Runtime.Core
 {
     /// <summary>
     /// ScriptableObject that contains useful information for Entities.

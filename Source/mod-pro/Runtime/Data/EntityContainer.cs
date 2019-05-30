@@ -5,7 +5,7 @@
     /// </summary>
     public class EntityContainer
     {
-        private Game.EntityData m_EntityData = null;
+        private Core.EntityData m_EntityData = null;
 
         #region Constructor
 
@@ -13,7 +13,7 @@
         /// Constructor for the class.
         /// </summary>
         /// <param name="entityData">EntityData that this class will use.</param>
-        public EntityContainer(Game.EntityData entityData)
+        public EntityContainer(Core.EntityData entityData)
         {
             m_EntityData = entityData;
         }

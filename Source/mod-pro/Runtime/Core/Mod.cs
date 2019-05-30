@@ -1,20 +1,32 @@
-﻿using StankUtilities.Runtime.Utilities;
-
-using Newtonsoft.Json;
-
-namespace ModPro.Runtime.Modding
+﻿namespace ModPro.Runtime.Core
 {
     /// <summary>
     /// Class that creates a mod.
     /// </summary>
     public class Mod
     {
+        #region Constructor
+
+        /// <summary>
+        /// Initializes the Mod object.
+        /// </summary>
+        /// <param name="filePath">Path to the mod.</param>
+        /// <param name="name">Name of the mod.</param>
+        /// <param name="script">Path to the mod's main script.</param>
+        public Mod(string filePath, string name, string script)
+        {
+            FilePath = filePath;
+            Name = name;
+            Script = script;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Returns the path of the mod file.
         /// </summary>
-        [JsonIgnore]
         public string FilePath { get; set; } = "";
 
         /// <summary>

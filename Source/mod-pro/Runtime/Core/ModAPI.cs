@@ -2,13 +2,11 @@
 
 using UnityEngine;
 
-using ModPro.Runtime.Game;
-
 using StankUtilities.Runtime.Utilities;
 
 using MoonSharp.Interpreter;
 
-namespace ModPro.Runtime.Modding
+namespace ModPro.Runtime.Core
 {
     /// <summary>
     /// Class that adds an API to any modders.

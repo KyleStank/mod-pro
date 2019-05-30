@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-// TODO: Remove ALL code from ModPro.
-using ModPro.Runtime.Game;
+using ModPro.Runtime.Core;
 
 using StankUtilities.Runtime.Utilities;
 

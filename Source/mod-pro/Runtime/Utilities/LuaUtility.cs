@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-using ModPro.Runtime.Modding;
+using ModPro.Runtime.Core;
 
 using StankUtilities.Runtime.Utilities;
 

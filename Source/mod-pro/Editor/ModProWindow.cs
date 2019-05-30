@@ -1,19 +1,12 @@
-﻿using System.IO;
-using System.IO.Compression;
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-
-using ModPro.Runtime.Modding;
-
-using Newtonsoft.Json;
 
 namespace ModPro.Editor
 {
     public class ModProWindow : EditorWindow
     {
         // Add menu item named "My Window" to the Window menu
-        [MenuItem("Tools/ModPro")]
+        [MenuItem(itemName: "Tools/ModPro", priority = 2)]
         public static void ShowWindow()
         {
             if(PlayerPrefs.HasKey("GameDataDirectory"))
