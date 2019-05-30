@@ -11,7 +11,11 @@ namespace ModPro.Runtime.Data
     /// </summary>
     public class ModSettings : BaseSettings
     {
+        private const string k_ModsFolderKey = "ModsFolder";
         private const string k_ModsListKey = "Mods";
+
+        private string m_ModsFolder = "";
+        private List<Mod> m_Mods = new List<Mod>();
 
         #region Constructor
 
@@ -19,16 +23,64 @@ namespace ModPro.Runtime.Data
         /// Initializes the settings object.
         /// </summary>
         /// <param name="filePath">Path at which the settings will be saved and loaded.</param>
-        public ModSettings(string filePath) : base(filePath) { }
+        /// <param name="modsPath">Path at which mods are stored.</param>
+        public ModSettings(string filePath, string modsPath) : base(filePath)
+        {
+            // Set the mods folder.
+            ModsFolder = modsPath;
+
+            // Try to load settings.
+            if(!Load())
+            {
+                // Add default settings.
+                OnInitialSetup();
+
+                // Save the settings.
+                Save();
+            }
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// Returns the path to the mods folder.
+        /// </summary>
+        public string ModsFolder
+        {
+            get
+            {
+                return m_ModsFolder;
+            }
+
+            set
+            {
+                // Set the mods folder value in the settings file.
+                SetSetting<string>(k_ModsFolderKey, value);
+
+                m_ModsFolder = value;
+            }
+        }
+
+        /// <summary>
         /// Returns a list of all of the mods.
         /// </summary>
-        public List<Mod> Mods { get; set; } = new List<Mod>();
+        public List<Mod> Mods
+        {
+            get
+            {
+                return m_Mods;
+            }
+
+            set
+            {
+                // Set the mods value in the settings file.
+                SetSetting<List<Mod>>(k_ModsListKey, value);
+
+                m_Mods = value;
+            }
+        }
 
         #endregion
 
@@ -44,6 +96,9 @@ namespace ModPro.Runtime.Data
         /// </summary>
         public override void OnLoad()
         {
+            // Load the mod folder path.
+            ModsFolder = LoadSetting<string>(k_ModsFolderKey);
+
             // Load the mods from the settings.
             Mods = LoadSetting<List<Mod>>(k_ModsListKey);
         }
@@ -53,19 +108,9 @@ namespace ModPro.Runtime.Data
         /// </summary>
         public override void OnInitialSetup()
         {
-            // Create initial list of mods.
-            Mods = new List<Mod>();
-            Mods.Add(new Mod("mymod.zip", "My Mod", "main.lua"));
-
-            //Mods.Add(new Mod("More Grass", 1));
-            //Mods.Add(new Mod("Better Combat", 2));
-            //Mods.Add(new Mod("Hot Females", 3));
-            
             // Add mods to the settings data.
+            SettingsData.Add(new Setting(k_ModsFolderKey, ModsFolder));
             SettingsData.Add(new Setting(k_ModsListKey, Mods));
-
-            // Save the settings.
-            Save(Newtonsoft.Json.Formatting.Indented);
         }
 
         #endregion
