@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+
+using UnityEngine;
 using UnityEditor;
 
 namespace ModPro.Editor
@@ -83,3 +85,5 @@ namespace ModPro.Editor
         }
     }
 }
+
+#endif

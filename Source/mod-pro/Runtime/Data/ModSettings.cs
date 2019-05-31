@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using ModPro.Runtime.Core;
 
@@ -28,6 +29,12 @@ namespace ModPro.Runtime.Data
         {
             // Set the mods folder.
             ModsFolder = modsPath;
+
+            // Create the directory if it doesn't exist.
+            if(!Directory.Exists(ModsFolder))
+            {
+                Directory.CreateDirectory(ModsFolder);
+            }
 
             // Try to load settings.
             if(!Load())
