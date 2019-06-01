@@ -1,6 +1,4 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ModPro.Runtime.Core
 {
@@ -30,20 +28,6 @@ namespace ModPro.Runtime.Core
             set
             {
                 m_EntityData = value;
-            }
-        }
-
-        #endregion
-
-        #region Unity Methods
-        
-        private void OnEnable()
-        {
-            Debug.Log(Data);
-            if(Data != null)
-            {
-                Debug.Log("Name: " + Data.Name);
-                Debug.Log("ID: " + Data.ID);
             }
         }
 

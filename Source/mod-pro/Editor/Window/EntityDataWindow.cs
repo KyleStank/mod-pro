@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEditor;
 
 using ModPro.Runtime.Core;
-using ModPro.Runtime.Data;
 
 namespace ModPro.Editor.Window
 {
@@ -15,13 +14,20 @@ namespace ModPro.Editor.Window
     /// </summary>
     public class EntityDataWindow : EditorWindow
     {
-        private static ModSettings modSettings = null;
         private static List<EntityData> modEntities = null;
 
         #region Unity Methods
         
         private void OnGUI()
         {
+            // If the ModSettings object is null, do not proceed.
+            if(ModProManager.TheModSettings == null)
+            {
+                GUILayout.Label("The settings file for ModPro have not been created.");
+                GUILayout.Label("Try opening the dashboard and settings up the default file locations for everything.");
+                return;
+            }
+
             // Create label for "Entities"
             GUILayout.Label("Entities", EditorStyles.boldLabel);
 
@@ -33,7 +39,7 @@ namespace ModPro.Editor.Window
             // Display "+" button.
             if(GUILayout.Button(new GUIContent("New")))
             {
-                modSettings.Entities.Add(new EntityData("New Entity"));
+                ModProManager.TheModSettings.Entities.Add(new EntityData("New Entity"));
             }
 
             EditorGUILayout.EndHorizontal();
@@ -82,8 +88,8 @@ namespace ModPro.Editor.Window
             if(GUILayout.Button(new GUIContent("Save")))
             {
                 // Save.
-                modSettings.Entities = modEntities;
-                modSettings.Save();
+                ModProManager.TheModSettings.Entities = modEntities;
+                ModProManager.TheModSettings.Save();
                 AssetDatabase.Refresh();
             }
 
@@ -100,9 +106,11 @@ namespace ModPro.Editor.Window
         [MenuItem(itemName: "Tools/ModPro/Entity Manager", priority = 2)]
         public static void ShowWindow()
         {
-            // TODO: Get rid of the hard coding here. Hook up a "Choose Data Path" to the ModPro dashboard window.
-            modSettings = new ModSettings("D:/Unity3D Projects/smashndash/Assets/Game/Settings/mod_settings.json", "D:/Unity3D Projects/smashndash/Assets/Game/Mods");
-            modEntities = modSettings.Entities;
+            // Create instance of ModSettings.
+            ModProManager.InitializeModSettings();
+
+            // Setup required variables.
+            modEntities = ModProManager.TheModSettings.Entities;
 
             // Show existing window instance. If one doesn't exist, make one.
             GetWindow<EntityDataWindow>("Entity Manager");

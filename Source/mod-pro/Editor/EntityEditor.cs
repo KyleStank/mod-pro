@@ -16,7 +16,6 @@ namespace ModPro.Editor
     [CustomEditor(typeof(Entity))]
     public class EntityEditor : UnityEditor.Editor
     {
-        private ModSettings m_ModSettings = null;
         private List<EntityData> m_ModEntities = null;
 
         private Entity m_Entity = null;
@@ -30,9 +29,8 @@ namespace ModPro.Editor
             // Get the target and assign it a variable for re-use.
             m_Entity = target as Entity;
 
-            // TODO: Get rid of the hard coding here. Hook up a "Choose Data Path" to the ModPro dashboard window.
-            m_ModSettings = new ModSettings("D:/Unity3D Projects/smashndash/Assets/Game/Settings/mod_settings.json", "D:/Unity3D Projects/smashndash/Assets/Game/Mods");
-            m_ModEntities = m_ModSettings.Entities;
+            ModProManager.InitializeModSettings();
+            m_ModEntities = ModProManager.TheModSettings.Entities;
 
             // Assign a default entity if needed.
             if(m_Entity.Data == null && m_ModEntities.Count > 0)

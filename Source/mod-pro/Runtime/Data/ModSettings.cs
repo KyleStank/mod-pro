@@ -29,6 +29,12 @@ namespace ModPro.Runtime.Data
         /// <param name="modsPath">Path at which mods are stored.</param>
         public ModSettings(string filePath, string modsPath) : base(filePath)
         {
+            // If the mods path is empty, do not proceed.
+            if(string.IsNullOrWhiteSpace(modsPath))
+            {
+                return;
+            }
+
             // Set the mods folder.
             ModsFolder = modsPath;
 
