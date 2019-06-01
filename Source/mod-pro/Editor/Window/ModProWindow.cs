@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace ModPro.Editor
+namespace ModPro.Editor.Window
 {
     /// <summary>
     /// Custom Unity Editor Window that is responsible for managing ModPro.

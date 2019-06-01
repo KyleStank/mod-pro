@@ -29,6 +29,11 @@ namespace ModPro.Runtime.Core
             {
                 return m_EntityData;
             }
+
+            set
+            {
+                m_EntityData = value;
+            }
         }
 
         /// <summary>

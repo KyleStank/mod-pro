@@ -8,7 +8,7 @@ using UnityEditor;
 using ModPro.Runtime.Core;
 using ModPro.Runtime.Data;
 
-namespace ModPro.Editor
+namespace ModPro.Editor.Window
 {
     /// <summary>
     /// Created a window in the Unity Editor that manages all of the base/default Entities in the game.

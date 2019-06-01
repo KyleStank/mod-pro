@@ -61,8 +61,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editor\EntityDataWindow.cs" />
-    <Compile Include="Editor\ModProWindow.cs" />
+    <Compile Include="Editor\Window\EntityDataWindow.cs" />
+    <Compile Include="Editor\EntityEditor.cs" />
+    <Compile Include="Editor\Window\ModProWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\Core\Entity.cs" />
     <Compile Include="Runtime\Core\EntityData.cs" />
