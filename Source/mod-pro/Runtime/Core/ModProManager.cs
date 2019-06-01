@@ -9,6 +9,8 @@ namespace ModPro.Runtime.Core
     /// </summary>
     public static class ModProManager
     {
+        // TODO: Try to refactor this class so it is not so reliant on other scripts calling on the "SettingsPath" and "ModsPath" properties.
+
         private const string k_SettingsPathKey = "MP_SettingsPath";
         private const string k_ModsPath = "MP_ModsPath";
 
@@ -83,6 +85,27 @@ namespace ModPro.Runtime.Core
 
             // Create new instance of ModSettings!
             TheModSettings = new ModSettings(SettingsPath, ModsPath);
+        }
+
+        /// <summary>
+        /// Initializes the ModSettings object.
+        /// </summary>
+        /// <param name="settingsPath">Path of the settings file.</param>
+        /// <param name="modsPath">Path of where mods are stored.</param>
+        public static void InitializeModSettings(string settingsPath, string modsPath)
+        {
+            // If any parameters are empty, do not proceed.
+            if(string.IsNullOrWhiteSpace(settingsPath) || string.IsNullOrWhiteSpace(modsPath))
+            {
+                return;
+            }
+
+            // Set the settings and mod paths.
+            SettingsPath = settingsPath;
+            ModsPath = modsPath;
+
+            // Initialize ModSettings!
+            InitializeModSettings();
         }
 
         #endregion
