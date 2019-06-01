@@ -77,6 +77,12 @@ namespace ModPro.Editor
             }
 
             EditorGUILayout.EndVertical();
+
+            // Mark object as dirty so all changes persist.
+            if(GUI.changed)
+            {
+                EditorUtility.SetDirty(m_Entity);
+            }
         }
 
         #endregion

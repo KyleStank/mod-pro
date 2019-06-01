@@ -15,9 +15,6 @@ namespace ModPro.Runtime.Core
         [SerializeField]
         private EntityData m_EntityData = null;
 
-        [SerializeField]
-        private SpriteRenderer[] m_ModdableSprites = new SpriteRenderer[0];
-
         #region Properties
 
         /// <summary>
@@ -36,44 +33,17 @@ namespace ModPro.Runtime.Core
             }
         }
 
-        /// <summary>
-        /// Returns the list of Sprites that are moddable.
-        /// </summary>
-        public SpriteRenderer[] ModdableSprites
-        {
-            get
-            {
-                return m_ModdableSprites;
-            }
-        }
-
         #endregion
 
         #region Unity Methods
         
         private void OnEnable()
         {
-            // Randomly generate new ID.
-            Guid guid = Guid.NewGuid();
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        public void SetNewSprite(int index, Sprite sprite)
-        {
-            for(int i = 0; i < m_ModdableSprites.Length; i++)
+            Debug.Log(Data);
+            if(Data != null)
             {
-                if(index == i)
-                {
-                    if(m_ModdableSprites[i] == null || sprite == null)
-                    {
-                        continue;
-                    }
-
-                    m_ModdableSprites[i].sprite = sprite;
-                }
+                Debug.Log("Name: " + Data.Name);
+                Debug.Log("ID: " + Data.ID);
             }
         }
 
