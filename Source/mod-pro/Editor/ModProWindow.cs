@@ -5,84 +5,45 @@ using UnityEditor;
 
 namespace ModPro.Editor
 {
+    /// <summary>
+    /// Custom Unity Editor Window that is responsible for managing ModPro.
+    /// </summary>
     public class ModProWindow : EditorWindow
     {
-        // Add menu item named "My Window" to the Window menu
-        [MenuItem(itemName: "Tools/ModPro", priority = 2)]
-        public static void ShowWindow()
+        #region Unity Methods
+
+        private void OnGUI()
         {
-            if(PlayerPrefs.HasKey("GameDataDirectory"))
+            // Create label for "Dashboard"
+            GUILayout.Label("Dashboard", EditorStyles.boldLabel);
+
+            EditorGUILayout.BeginHorizontal();
+
+            // Display "Open Entity Manager" button.
+            if(GUILayout.Button(new GUIContent("Open Entity Manager")))
             {
-                // TODO: Add back GameDataPath
-                //Settings.GameDataPath = PlayerPrefs.GetString("GameDataDirectory");
+                // Open the Entity Manager window.
+                EntityDataWindow.ShowWindow();
             }
 
+            EditorGUILayout.EndHorizontal();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Display the main window!
+        /// </summary>
+        [MenuItem(itemName: "Tools/ModPro/Dashboard", priority = 1)]
+        public static void ShowWindow()
+        {
             // Show existing window instance. If one doesn't exist, make one.
             GetWindow<ModProWindow>("ModPro Dashboard");
         }
 
-        void OnGUI()
-        {
-            GUILayout.Label("Base Settings", EditorStyles.boldLabel);
-
-            EditorGUILayout.BeginVertical();
-
-
-
-            EditorGUILayout.EndVertical();
-
-            // TODO: Add back base settings for Window.
-            //EditorGUILayout.BeginHorizontal();
-
-            //// Display game data path.
-            //EditorGUILayout.LabelField(new GUIContent("Game Data Path: " + Settings.GameDataPath));
-
-            //EditorGUILayout.EndHorizontal();
-
-            //EditorGUILayout.BeginHorizontal();
-
-            //// Display "Choose Folder" button.
-            //if(GUILayout.Button(new GUIContent("Choose Folder")))
-            //{
-            //    string path = EditorUtility.OpenFolderPanel("Choose Game Data Folder", Settings.GameDataPath, "") + "/";
-            //    Settings.GameDataPath = path;
-            //    PlayerPrefs.SetString("GameDataDirectory", Settings.GameDataPath);
-            //}
-
-            //EditorGUILayout.EndHorizontal();
-
-            //EditorGUILayout.BeginVertical();
-
-            //// Display "Setup Required Directories" button.
-            //if(GUILayout.Button(new GUIContent("Setup Required Directories")))
-            //{
-            //    if(!Directory.Exists(Settings.GameDataPath))
-            //    {
-            //        Directory.CreateDirectory(Settings.GameDataPath);
-            //    }
-
-            //    if(!Directory.Exists(Settings.GameDataPath + "Mods"))
-            //    {
-            //        Directory.CreateDirectory(Settings.GameDataPath + "Mods");
-            //    }
-
-            //    Settings.LoadSettings();
-            //    Settings.SaveSettings();
-
-            //    AssetDatabase.Refresh();
-            //}
-
-            //// Update Mods.
-            //if(GUILayout.Button(new GUIContent("Update Mods")))
-            //{
-            //    Settings.Data.Mods.Clear();
-            //    Settings.FindMods();
-            //    Settings.SaveSettings();
-            //    AssetDatabase.Refresh();
-            //}
-
-            //EditorGUILayout.EndVertical();
-        }
+        #endregion
     }
 }
 

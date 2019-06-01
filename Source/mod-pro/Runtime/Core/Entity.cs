@@ -20,6 +20,9 @@ namespace ModPro.Runtime.Core
 
         #region Properties
 
+        /// <summary>
+        /// Data the the Entity uses.
+        /// </summary>
         public EntityData Data
         {
             get

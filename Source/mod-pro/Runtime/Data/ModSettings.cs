@@ -14,9 +14,11 @@ namespace ModPro.Runtime.Data
     {
         private const string k_ModsFolderKey = "ModsFolder";
         private const string k_ModsListKey = "Mods";
+        private const string k_EntitiesListKey = "Entities";
 
         private string m_ModsFolder = "";
         private List<Mod> m_Mods = new List<Mod>();
+        private List<EntityData> m_Entities = new List<EntityData>();
 
         #region Constructor
 
@@ -89,6 +91,25 @@ namespace ModPro.Runtime.Data
             }
         }
 
+        /// <summary>
+        /// Returns the list of Entities.
+        /// </summary>
+        public List<EntityData> Entities
+        {
+            get
+            {
+                return m_Entities;
+            }
+
+            set
+            {
+                // Set the entites value in the settings file.
+                SetSetting<List<EntityData>>(k_EntitiesListKey, value);
+
+                m_Entities = value;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -108,6 +129,9 @@ namespace ModPro.Runtime.Data
 
             // Load the mods from the settings.
             Mods = LoadSetting<List<Mod>>(k_ModsListKey);
+
+            // Load the entities from the settings.
+            Entities = LoadSetting<List<EntityData>>(k_EntitiesListKey);
         }
 
         /// <summary>
@@ -118,6 +142,7 @@ namespace ModPro.Runtime.Data
             // Add mods to the settings data.
             SettingsData.Add(new Setting(k_ModsFolderKey, ModsFolder));
             SettingsData.Add(new Setting(k_ModsListKey, Mods));
+            SettingsData.Add(new Setting(k_EntitiesListKey, Entities));
         }
 
         #endregion

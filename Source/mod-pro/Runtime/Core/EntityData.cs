@@ -1,57 +1,40 @@
-﻿using UnityEngine;
+﻿using StankUtilities.Runtime.Utilities;
 
 namespace ModPro.Runtime.Core
 {
     /// <summary>
-    /// ScriptableObject that contains useful information for Entities.
+    /// Class that contains data about entites.
     /// </summary>
-    [CreateAssetMenu(fileName = "Entity Data", menuName = "ModPro/Entity Data", order = 1)]
-    public class EntityData : ScriptableObject
+    public class EntityData
     {
-        [SerializeField]
-        private string m_EntityName = "";
-        [SerializeField]
-        private string m_ID = "";
+        #region Constructor
+
+        /// <summary>
+        /// Initialize the EntityData object.
+        /// </summary>
+        /// <param name="name">Name to give the entity.</param>
+        public EntityData(string name)
+        {
+            // Set the name.
+            Name = name;
+
+            // Generate the ID.
+            ID = MathUtility.GenerateGUID();
+        }
+
+        #endregion
 
         #region Properties
 
         /// <summary>
         /// Returns the name of the Entity.
         /// </summary>
-        public string EntityName
-        {
-            get
-            {
-                return m_EntityName;
-            }
-
-            set
-            {
-                if(!Application.IsPlaying(this))
-                {
-                    m_EntityName = value;
-                }
-            }
-        }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// Returns the ID of the Entity.
         /// </summary>
-        public string ID
-        {
-            get
-            {
-                return m_ID;
-            }
-
-            set
-            {
-                if(!Application.IsPlaying(this))
-                {
-                    m_ID = value;
-                }
-            }
-        }
+        public string ID { get; private set; } = "";
 
         #endregion
     }
