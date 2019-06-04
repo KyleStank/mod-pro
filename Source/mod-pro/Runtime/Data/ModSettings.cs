@@ -4,6 +4,7 @@ using System.IO;
 using ModPro.Runtime.Core;
 
 using StankUtilities.Runtime.Data;
+using StankUtilities.Runtime.Utilities;
 
 namespace ModPro.Runtime.Data
 {
@@ -15,6 +16,8 @@ namespace ModPro.Runtime.Data
         private const string k_ModsFolderKey = "ModsFolder";
         private const string k_ModsListKey = "Mods";
         private const string k_EntitiesListKey = "Entities";
+
+        private const string k_MainModFileName = "mod.json";
 
         private string m_ModsFolder = "";
         private List<Mod> m_Mods = new List<Mod>();
@@ -145,10 +148,108 @@ namespace ModPro.Runtime.Data
         /// </summary>
         public override void OnInitialSetup()
         {
+            // Scan the mods directory.
+            ScanModDirectory();
+
             // Add mods to the settings data.
             SettingsData.Add(new Setting(k_ModsFolderKey, ModsFolder));
             SettingsData.Add(new Setting(k_ModsListKey, Mods));
             SettingsData.Add(new Setting(k_EntitiesListKey, Entities));
+        }
+
+        /// <summary>
+        /// Scans the mod directory to check for any mods.
+        /// </summary>
+        public void ScanModDirectory()
+        {
+            // Empty the current Mods list.
+            Mods = new List<Mod>();
+
+            // Scan for directory mods.
+            ScanForDirectoryMods();
+
+            // Scan for ZIP mods.
+            ScanForZIPMods();
+        }
+
+        /// <summary>
+        /// Adds a Mod to the main Mod list if the provided Mod is valid.
+        /// </summary>
+        public bool AddMod(Mod mod)
+        {
+            if(mod == null)
+            {
+                DebuggerUtility.LogError("Cannot add Mod to main Mod list because the provided Mod is null!");
+                return false;
+            }
+
+            // Add mod to list.
+            Mods.Add(mod);
+
+            return true;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Scans the Mods folder for mods that are inside a regular folder.
+        /// </summary>
+        private void ScanForDirectoryMods()
+        {
+            // Find all directories in the mods folder.
+            string[] modFolderDirectories = Directory.GetDirectories(ModsFolder);
+
+            // Loop through all found directories.
+            for(int i = 0; i < modFolderDirectories.Length; i++)
+            {
+                // Get all files in the current directory.
+                string[] files = Directory.GetFiles(modFolderDirectories[i]);
+
+                // Search for the "mod.json" file.
+                for(int k = 0; k < files.Length; k++)
+                {
+                    // If "mod.json" is found, set the temporary mod object.
+                    if(Path.GetFileName(files[k]).ToLower() == k_MainModFileName.ToLower())
+                    {
+                        if(AddMod(JSONUtility.DeserializeObject<Mod>(File.OpenText(files[k]).ReadToEnd())))
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Scans the Mods folder for mods that are inside of a ZIP archive.
+        /// </summary>
+        private void ScanForZIPMods()
+        {
+            // Find all files in the mods folder.
+            string[] modFolderFiles = Directory.GetFiles(ModsFolder);
+
+            // Loop through all found files.
+            for(int i = 0; i < modFolderFiles.Length; i++)
+            {
+                // If the current file is a zip file, check if it is a mod.
+                if(IOUtility.IsZipFile(modFolderFiles[i]))
+                {
+                    // Open zip file.
+                    IOUtility.OpenZIPArchive(modFolderFiles[i], (file, zipArchive, entry, stream) =>
+                    {
+                        // If "mod.json" is found, set the temporary mod object.
+                        if(entry.Name.ToLower() == k_MainModFileName.ToLower())
+                        {
+                            if(AddMod(JSONUtility.DeserializeObject<Mod>(new StreamReader(stream).ReadToEnd())))
+                            {
+                                return;
+                            }
+                        }
+                    });
+                }
+            }
         }
 
         #endregion

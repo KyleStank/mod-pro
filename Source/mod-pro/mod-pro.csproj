@@ -68,7 +68,7 @@
     <Compile Include="Runtime\Core\Entity.cs" />
     <Compile Include="Runtime\Core\EntityData.cs" />
     <Compile Include="Runtime\Core\Mod.cs" />
-    <Compile Include="Runtime\Core\ModAPI.cs" />
+    <Compile Include="Runtime\Core\LuaAPIBase.cs" />
     <Compile Include="Runtime\Core\ModProManager.cs" />
     <Compile Include="Runtime\Data\ModSettings.cs" />
     <Compile Include="Runtime\ModProInitializer.cs" />

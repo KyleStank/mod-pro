@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using ModPro.Runtime.Core;
 
@@ -16,16 +14,15 @@ namespace ModPro.Runtime
 
         private void Awake()
         {
-            // Setup default directories.
-            string defaultSettingsPath = string.IsNullOrWhiteSpace(ModProManager.SettingsPath) ? Application.dataPath + "/Game/Settings/" : ModProManager.SettingsPath;
-            string defaultModsPath = string.IsNullOrWhiteSpace(ModProManager.ModsPath) ? Application.dataPath + "/Game/Mods/" : ModProManager.ModsPath;
-
-            // Create default directories.
-            Directory.CreateDirectory(defaultSettingsPath);
-            Directory.CreateDirectory(defaultModsPath);
+            // Set default settings files if needed.
+            if(string.IsNullOrWhiteSpace(ModProManager.SettingsPath) || string.IsNullOrWhiteSpace(ModProManager.ModsPath))
+            {
+                ModProManager.SettingsPath = Application.dataPath + "/Game/Settings/mod_settings.json";
+                ModProManager.ModsPath = Application.dataPath + "/Game/Mods/";
+            }
 
             // Initialize ModPro.
-            ModProManager.InitializeModSettings(defaultSettingsPath + "mod_settings.json", defaultModsPath);
+            ModProManager.InitializeModSettings();
         }
 
         #endregion

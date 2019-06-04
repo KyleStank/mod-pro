@@ -1,4 +1,6 @@
-﻿namespace ModPro.Runtime.Core
+﻿using ModPro.Runtime.Utilities;
+
+namespace ModPro.Runtime.Core
 {
     /// <summary>
     /// Class that creates a mod.
@@ -25,7 +27,7 @@
         #region Properties
 
         /// <summary>
-        /// Returns the path of the mod file.
+        /// Returns the path of the mod.
         /// </summary>
         public string FilePath { get; set; } = "";
 
@@ -49,7 +51,7 @@
         public void LoadMod()
         {
             // Execute the mod's script!
-            //IOUtility.ExecuteLuaScript(FilePath, Script);
+            LuaUtility.ExecuteLuaScript(FilePath, Script, new LuaAPIBase());
         }
 
         #endregion
