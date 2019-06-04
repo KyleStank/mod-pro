@@ -117,6 +117,32 @@ namespace ModPro.Editor.Window
             GetWindow<ModProWindow>("ModPro Dashboard");
         }
 
+        /// <summary>
+        /// Adds the ability to create a Lua script inside the Unity Editor
+        /// </summary>
+        [MenuItem("Assets/Create/ModPro/Lua Script", priority = 1)]
+        public static void CreateLuaScript()
+        {
+            // Get current path in project.
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+
+            // If no current path was found, set the default to be the Assets folder.
+            if(string.IsNullOrWhiteSpace(path))
+            {
+                path = "Assets";
+            }
+            else if(!string.IsNullOrWhiteSpace(Path.GetExtension(path)))
+            {
+                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            }
+
+            // Initialize asset.
+            TextAsset textAsset = new TextAsset("");
+
+            // Create asset.
+            ProjectWindowUtil.CreateAsset(textAsset, AssetDatabase.GenerateUniqueAssetPath(path + "/script.lua"));
+        }
+
         #endregion
 
         #region Private Methods
