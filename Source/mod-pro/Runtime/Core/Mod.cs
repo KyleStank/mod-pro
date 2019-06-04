@@ -1,4 +1,8 @@
-﻿using ModPro.Runtime.Utilities;
+﻿using System.IO;
+
+using ModPro.Runtime.Utilities;
+
+using StankUtilities.Runtime.Utilities;
 
 namespace ModPro.Runtime.Core
 {
@@ -32,6 +36,11 @@ namespace ModPro.Runtime.Core
         public string FilePath { get; set; } = "";
 
         /// <summary>
+        /// Returns the temporary path of the mod.
+        /// </summary>
+        public string TempFilePath { get; set; } = "";
+
+        /// <summary>
         /// Returns the name of the mod.
         /// </summary>
         public string Name { get; set; } = "";
@@ -50,8 +59,41 @@ namespace ModPro.Runtime.Core
         /// </summary>
         public void LoadMod()
         {
+            // Check if mod is a ZIP archive mod.
+            if(IOUtility.IsZipFile(FilePath))
+            {
+                //DebuggerUtility.Log("is zip file!");
+                DebuggerUtility.Log(FilePath);
+            }
+            else if(Directory.Exists(FilePath)) // Make sure mod directory exists.
+            {
+                //DebuggerUtility.Log("is a folder mod!");
+            }
+            else
+            {
+                DebuggerUtility.LogError("Could not load mod because it's file path was not properly found!");
+            }
+
             // Execute the mod's script!
-            LuaUtility.ExecuteLuaScript(FilePath, Script, new LuaAPIBase());
+            //LuaUtility.ExecuteLuaScript(FilePath, Script, new LuaAPIBase());
+        }
+
+        /// <summary>
+        /// Ensures that the FilePath property is not serialized in the mod's configuration file.
+        /// </summary>
+        /// <returns>Returns a bool that is always false.</returns>
+        public bool ShouldSerializeFilePath()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Ensures that the TempFilePath property is not serialized in the mod's configuration file.
+        /// </summary>
+        /// <returns>Returns a bool that is always false.</returns>
+        public bool ShouldSerializeTempFilePath()
+        {
+            return false;
         }
 
         #endregion

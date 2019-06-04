@@ -18,6 +18,7 @@ namespace ModPro.Runtime.Data
         private const string k_EntitiesListKey = "Entities";
 
         private const string k_MainModFileName = "mod.json";
+        private const string k_TempModsFolder = "mods_temp";
 
         private string m_ModsFolder = "";
         private List<Mod> m_Mods = new List<Mod>();
@@ -170,17 +171,29 @@ namespace ModPro.Runtime.Data
 
             // Scan for ZIP mods.
             ScanForZIPMods();
+
+            // Move mods to the temporary mods directory.
+            CreateTempForMods();
         }
 
         /// <summary>
-        /// Adds a Mod to the main Mod list if the provided Mod is valid.
+        /// Adds a Mod to the main Mods list.
         /// </summary>
-        public bool AddMod(Mod mod)
+        /// <param name="mod">Mod to add to the list.</param>
+        /// <param name="filePath">Custom file path to give to Mod.</param>
+        /// <returns>Returns a bool that is true if the Mod is successfully added. Returns false otherwise.</returns>
+        public bool AddMod(Mod mod, string filePath = "")
         {
             if(mod == null)
             {
                 DebuggerUtility.LogError("Cannot add Mod to main Mod list because the provided Mod is null!");
                 return false;
+            }
+
+            // If a custom file path was provided, set it here.
+            if(!string.IsNullOrWhiteSpace(filePath))
+            {
+                mod.FilePath = filePath;
             }
 
             // Add mod to list.
@@ -213,7 +226,7 @@ namespace ModPro.Runtime.Data
                     // If "mod.json" is found, set the temporary mod object.
                     if(Path.GetFileName(files[k]).ToLower() == k_MainModFileName.ToLower())
                     {
-                        if(AddMod(JSONUtility.DeserializeObject<Mod>(File.OpenText(files[k]).ReadToEnd())))
+                        if(AddMod(JSONUtility.DeserializeObject<Mod>(File.OpenText(files[k]).ReadToEnd()), modFolderDirectories[i]))
                         {
                             break;
                         }
@@ -242,12 +255,75 @@ namespace ModPro.Runtime.Data
                         // If "mod.json" is found, set the temporary mod object.
                         if(entry.Name.ToLower() == k_MainModFileName.ToLower())
                         {
-                            if(AddMod(JSONUtility.DeserializeObject<Mod>(new StreamReader(stream).ReadToEnd())))
+                            if(AddMod(JSONUtility.DeserializeObject<Mod>(new StreamReader(stream).ReadToEnd()), modFolderFiles[i]))
                             {
                                 return;
                             }
                         }
                     });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a temporary folder where all mods will be loaded from.
+        /// </summary>
+        private void CreateTempForMods()
+        {
+            string path = ModsFolder + k_TempModsFolder;
+
+            // Create the temporary directory if it doesn't exist.
+            if(!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            // Get temp directory's information.
+            DirectoryInfo tempDirectory = new DirectoryInfo(path);
+
+            // Remove all files in temporary folder.
+            FileInfo[] files = tempDirectory.GetFiles();
+            for(int i = 0; i < files.Length; i++)
+            {
+                files[i].Delete();
+            }
+
+            // Remove all directories in temporary folder.
+            DirectoryInfo[] directories = tempDirectory.GetDirectories();
+            for(int i = 0; i < directories.Length; i++)
+            {
+                directories[i].Delete(true);
+            }
+
+            // Copy all mods to temporary directory.
+            for(int i = 0; i < Mods.Count; i++)
+            {
+                string destPath = tempDirectory + "/" + Mods[i].Name + "_" + i;
+
+                // Create destination folder.
+                if(!Directory.Exists(destPath))
+                {
+                    Directory.CreateDirectory(destPath);
+                }
+
+                // If current mod is simply a directory, copy it to the temporary folder.
+                if(Directory.Exists(Mods[i].FilePath))
+                {
+                    // Copy mod's contents.
+                    IOUtility.DirectoryCopy(Mods[i].FilePath, destPath, true);
+
+                    // Set mod's temporary path.
+                    Mods[i].TempFilePath = destPath;
+                }
+
+                // If current mod if a zip file, uncompress it and then copy it to the temporary folder.
+                if(IOUtility.IsZipFile(Mods[i].FilePath))
+                {
+                    // Extract mod's contents.
+                    IOUtility.ExtractZIPArchive(Mods[i].FilePath, destPath);
+
+                    // Set mod's temporary path.
+                    Mods[i].TempFilePath = destPath;
                 }
             }
         }
