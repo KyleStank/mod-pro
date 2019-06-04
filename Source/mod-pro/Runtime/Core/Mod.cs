@@ -59,23 +59,15 @@ namespace ModPro.Runtime.Core
         /// </summary>
         public void LoadMod()
         {
-            // Check if mod is a ZIP archive mod.
-            if(IOUtility.IsZipFile(FilePath))
+            // If the script file exists, execute the mod!
+            if(File.Exists(TempFilePath + "/" + Script))
             {
-                //DebuggerUtility.Log("is zip file!");
-                DebuggerUtility.Log(FilePath);
-            }
-            else if(Directory.Exists(FilePath)) // Make sure mod directory exists.
-            {
-                //DebuggerUtility.Log("is a folder mod!");
+                LuaUtility.ExecuteLuaScript(TempFilePath + "/" + Script, new LuaAPIBase());
             }
             else
             {
-                DebuggerUtility.LogError("Could not load mod because it's file path was not properly found!");
+                DebuggerUtility.LogError("Cannot load mod because the Lua script in mod.json does not exist!");
             }
-
-            // Execute the mod's script!
-            //LuaUtility.ExecuteLuaScript(FilePath, Script, new LuaAPIBase());
         }
 
         /// <summary>

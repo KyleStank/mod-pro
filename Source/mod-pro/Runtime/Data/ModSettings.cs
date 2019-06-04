@@ -217,6 +217,12 @@ namespace ModPro.Runtime.Data
             // Loop through all found directories.
             for(int i = 0; i < modFolderDirectories.Length; i++)
             {
+                // Skip temporary mods folder.
+                if(modFolderDirectories[i].ToLower().Contains(k_TempModsFolder.ToLower()))
+                {
+                    continue;
+                }
+
                 // Get all files in the current directory.
                 string[] files = Directory.GetFiles(modFolderDirectories[i]);
 
@@ -246,6 +252,12 @@ namespace ModPro.Runtime.Data
             // Loop through all found files.
             for(int i = 0; i < modFolderFiles.Length; i++)
             {
+                // Skip temporary mods folder.
+                if(modFolderFiles[i].ToLower().Contains(k_TempModsFolder.ToLower()))
+                {
+                    continue;
+                }
+
                 // If the current file is a zip file, check if it is a mod.
                 if(IOUtility.IsZipFile(modFolderFiles[i]))
                 {
