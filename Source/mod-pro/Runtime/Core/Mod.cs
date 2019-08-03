@@ -57,12 +57,20 @@ namespace ModPro.Runtime.Core
         /// <summary>
         /// Loads the mod.
         /// </summary>
-        public void LoadMod()
+        /// <param name="api">API to inject into script.</param>
+        public void LoadMod(LuaAPIBase api = null)
         {
             // If the script file exists, execute the mod!
             if(File.Exists(TempFilePath + "/" + Script))
             {
-                LuaUtility.ExecuteLuaScript(TempFilePath + "/" + Script, new LuaAPIBase());
+                // If no API was given, inject the default one.
+                if(api == null)
+                {
+                    api = new LuaAPIBase();
+                }
+
+                // Execute the mod's main script!
+                LuaUtility.ExecuteLuaScript(TempFilePath + "/" + Script, api, new string[] { TempFilePath });
             }
             else
             {

@@ -202,6 +202,26 @@ namespace ModPro.Runtime.Data
             return true;
         }
 
+        /// <summary>
+        /// Loads all of the mods.
+        /// </summary>
+        /// <param name="api">API to load.</param>
+        public void LoadAllMods(LuaAPIBase api = null)
+        {
+            // If the provided API is null, use the default API.
+            if(api == null)
+            {
+                api = new LuaAPIBase();
+            }
+
+            // Loop through all of the mods.
+            for(int i = 0; i < Mods.Count; i++)
+            {
+                // Load the mod!
+                Mods[i].LoadMod(api);
+            }
+        }
+
         #endregion
 
         #region Private Methods

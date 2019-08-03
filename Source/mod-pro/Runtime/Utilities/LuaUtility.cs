@@ -8,6 +8,8 @@ using StankUtilities.Runtime.Utilities;
 
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using MoonSharp.Interpreter.Loaders;
+using MoonSharp.Interpreter.REPL;
 
 namespace ModPro.Runtime.Utilities
 {
@@ -40,10 +42,44 @@ namespace ModPro.Runtime.Utilities
         /// </summary>
         /// <param name="luaCode">Lua code to execute.</param>
         /// <param name="api">API to pass into Lua script.</param>
-        public static void ExecuteLuaCode(string luaCode, LuaAPIBase api)
+        /// <param name="modulePaths">Module paths to pass into the script loader.</param>
+        public static void ExecuteLuaCode(string luaCode, LuaAPIBase api, string[] modulePaths = null)
         {
             // Create a new script.
-            Script script = new Script(CoreModules.Preset_SoftSandbox);
+            Script script = new Script(CoreModules.Preset_Complete);
+
+            // Set the script loader.
+            script.Options.ScriptLoader = new ReplInterpreterScriptLoader();
+
+            // Set the module paths, if possible.
+            if(modulePaths != null)
+            {
+                // Loop through all module paths.
+                for(int i = 0; i < modulePaths.Length; i++)
+                {
+                    // If the current module path doesn't exist, do not continue.
+                    if(!Directory.Exists(modulePaths[i]))
+                    {
+                        DebuggerUtility.LogWarning("Path doesn't exist! Skipping this module path...");
+                        continue;
+                    }
+
+                    // Get the last character of the path.
+                    char lastCharacter = modulePaths[i][modulePaths.Length - 1];
+
+                    // If the last character is not a forward slash, add one.
+                    if(lastCharacter != '/')
+                    {
+                        modulePaths[i] += '/';
+                    }
+
+                    // Add MoonSharp's "?" identifier.
+                    modulePaths[i] += "?.lua";
+                }
+                
+                // Set the script loader's module paths.
+                ((ScriptLoaderBase)script.Options.ScriptLoader).ModulePaths = modulePaths;
+            }
 
             // Set the registration policy to automatic.
             UserData.RegistrationPolicy = InteropRegistrationPolicy.Automatic;
@@ -63,7 +99,8 @@ namespace ModPro.Runtime.Utilities
         /// </summary>
         /// <param name="path">Lua script to execute.</param>
         /// <param name="api">API to pass into Lua script.</param>
-        public static void ExecuteLuaScript(string path, LuaAPIBase api)
+        /// <param name="modulePaths">Module paths to pass into the script loader.</param>
+        public static void ExecuteLuaScript(string path, LuaAPIBase api, string[] modulePaths = null)
         {
             // Check to make sure the file exists.
             if(!File.Exists(path))
@@ -80,7 +117,7 @@ namespace ModPro.Runtime.Utilities
             }
 
             // Execute code!
-            ExecuteLuaCode(File.ReadAllText(path), api);
+            ExecuteLuaCode(File.ReadAllText(path), api, modulePaths);
         }
 
         /// <summary>
@@ -89,7 +126,8 @@ namespace ModPro.Runtime.Utilities
         /// <param name="path">Path to the ZIP archive.</param>
         /// <param name="scriptFile">Path to the Lua script inside of the ZIP archive.</param>
         /// <param name="api">API to pass into Lua script.</param>
-        public static void ExecuteLuaScript(string path, string scriptFile, LuaAPIBase api)
+        /// <param name="modulePaths">Module paths to pass into the script loader.</param>
+        public static void ExecuteLuaScript(string path, string scriptFile, LuaAPIBase api, string[] modulePaths = null)
         {
             // Open the file.
             IOUtility.OpenZIPArchive(path, (file, zip, entry, stream) =>
@@ -100,7 +138,7 @@ namespace ModPro.Runtime.Utilities
                     StreamReader reader = new StreamReader(stream);
 
                     // Execute code!
-                    ExecuteLuaCode(reader.ReadToEnd(), api);
+                    ExecuteLuaCode(reader.ReadToEnd(), api, modulePaths);
                 }
             });
         }

@@ -137,10 +137,11 @@ namespace ModPro.Editor.Window
             }
 
             // Initialize asset.
-            TextAsset textAsset = new TextAsset("");
+            //TextAsset textAsset = new TextAsset("");
 
             // Create asset.
-            ProjectWindowUtil.CreateAsset(textAsset, AssetDatabase.GenerateUniqueAssetPath(path + "/script.lua"));
+            //ProjectWindowUtil.CreateAsset(textAsset, AssetDatabase.GenerateUniqueAssetPath(path + "/script.lua"));
+            ProjectWindowUtil.CreateAssetWithContent("script.lua", "");
         }
 
         #endregion
